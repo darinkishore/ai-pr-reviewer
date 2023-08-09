@@ -173,7 +173,7 @@ text \`LGTM!\` for that line range in the review section.
 19:
 20: def add(x, y):
 21:     z = x + y
-22:     retrn z
+22:     return z
 23: 
 24: def multiply(x, y):
 25:     return x * y
@@ -200,7 +200,9 @@ def subtract(x, y):
 
 ---comment_chains---
 \`\`\`
-Please review this change.
+Please review this change. 
+Line length MUST BE less than 50 characters.
+All functions SHOULD begin with test_<function_name>.
 \`\`\`
 
 ---end_change_section---
@@ -339,3 +341,6 @@ $comment
     return inputs.render(this.reviewFileDiff)
   }
 }
+
+
+// to change comment instructions, modify the ---comment_chains--- section
