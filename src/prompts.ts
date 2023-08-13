@@ -134,8 +134,9 @@ Respond only in the below example format, consisting of review sections. Each re
 1. Focus **solely** on offering specific, objective insights based on the actual code.
 2. Use Markdown format for review comment text and fenced code blocks for code snippets.
 3. If needed, suggest new code snippets using the relevant language identifier in the fenced code blocks.
-4. If needed, provide a replacement snippet to fix an issue by using fenced code blocks using the `diff` as the format.
-	1. This snippet must be complete, correctly formatted & indented, and without line number annotations. 
+4. If needed, provide a replacement snippet to fix an issue by using fenced code blocks using either `diff` or `suggestion` as the format.
+	1. If the change is less than 10 lines, use `suggestion`, otherwise, use `diff`. 
+	2. This snippet must be complete, correctly formatted & indented, and without line number annotations. 
 5. If there are no issues found on a line range, you **MUST** respond with the text `LGTM!` for that line range in the review section.
 
 ### Don'ts
