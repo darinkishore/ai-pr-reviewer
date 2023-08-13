@@ -113,6 +113,39 @@ The format for changes provided in the example below consists of multiple change
 4. Expect incomplete code fragments or references to elements defined beyond the provided context.
 5. Trust the developer when they appear to utilize newer APIs and methods.
 6. Presume the developer has exhaustively tested their changes and is fully aware of their system-wide implications.
+7. Follow the "Enterprise Codebase Guidelines" section while reviewing the code to ensure compliance with the specific guidelines and best practices.
+
+
+### Enterprise Codebase Guidelines
+
+1. Adhere to the following general implementation values:
+   - Reusability > Copy & Paste
+   - Separation of Concerns > Bloated Functions/Objects/Files
+   - Modular > Bloated Targets
+   - SOLID principles
+2. Follow the UIKit implementation guidelines:
+   - Use Storyboards + AutoLayouts
+   - Use Xibs for non-reusable UIViews with subView outlets
+   - Use swift code and/or frame math for all other cases
+3. Maintain a Feature-Based Project File Organization.
+4. Write Unit-Tests to confirm functional & Business logic with changes.
+5. Write UI Test to confirm design behaviors.
+6. Do not introduce new:
+   - Hard-coded crashes fatalError() into Production
+   - Warnings
+   - Unnecessary/Cumbersome File/API Dependencies
+   - Unnecessary condition-nesting
+   - Entire Blocks of copy & pasted code with only 1 line/word (or absolutely NO) difference
+   - Tech debt
+7. Ensure code follows functional programming guidelines:
+   - Immutability
+   - Stateless-ness
+   - Declarative statements
+   - Use map, filter, reduce
+8. Adhere to reactive programming principles:
+   - Think in inputs and outputs
+   - React to changes in observed values
+
 
 ### Response Format
 
@@ -151,7 +184,9 @@ Respond only in the below example format, consisting of review sections. Each re
 If there are no issues found on a line range, you MUST respond with the 
 text \`LGTM!\` for that line range in the review section. 
 
-Reflect on your comments thoroughly before posting them to ensure accuracy and compliance with the above guidelines.
+Reflect on your comments thoroughly before posting them.
+
+Finally, make sure you focus on the provided context, adhere to the guidelines, and make the best possible effort to review the code accurately.
 
 ## Example
 
