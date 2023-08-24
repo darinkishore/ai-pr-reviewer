@@ -19,12 +19,13 @@ export interface Ids {
 
 export class Bot {
   private readonly api: ChatGPTAPI | null = null // not free
-
   private readonly options: Options
 
   constructor(options: Options, openaiOptions: OpenAIOptions) {
     this.options = options
-    if (process.env.OPENAI_API_KEY) {
+
+    // Check if AZURE_API_KEY is available
+    if (process.env.AZURE_API_KEY) {
       const currentDate = new Date().toISOString().split('T')[0]
       const systemMessage = `${options.systemMessage} 
 Knowledge cutoff: ${openaiOptions.tokenLimits.knowledgeCutOff}
@@ -33,22 +34,38 @@ Current date: ${currentDate}
 IMPORTANT: Entire response must be in the language with ISO code: ${options.language}
 `
 
+      const apiBaseUrl = `https://${process.env.AZURE_VALUE1}.openai.azure.com/openai/deployments/${process.env.AZURE_VALUE2}?api-version=2023-03-15-preview`
+
+      const customFetch: typeof fetch = (
+        input: RequestInfo | URL,
+        opts?: RequestInit
+      ) => {
+        opts = opts || {} // Ensure opts is defined
+        opts.headers = opts.headers || new Headers() // Ensure headers are defined
+        ;(opts.headers as Record<string, string>)['api-key'] =
+          process.env.AZURE_API_KEY!
+        delete (opts.headers as Record<string, string>)['Authorization']
+        delete (opts.headers as Record<string, string>)['OpenAI-Organization']
+
+        return fetch(input, opts)
+      }
+
       this.api = new ChatGPTAPI({
-        apiBaseUrl: options.apiBaseUrl,
+        apiBaseUrl,
         systemMessage,
-        apiKey: process.env.OPENAI_API_KEY,
-        apiOrg: process.env.OPENAI_API_ORG ?? undefined,
+        apiKey: process.env.AZURE_API_KEY,
         debug: options.debug,
         maxModelTokens: openaiOptions.tokenLimits.maxTokens,
         maxResponseTokens: openaiOptions.tokenLimits.responseTokens,
         completionParams: {
           temperature: options.openaiModelTemperature,
           model: openaiOptions.model
-        }
+        },
+        fetch: customFetch
       })
     } else {
       const err =
-        "Unable to initialize the OpenAI API, both 'OPENAI_API_KEY' environment variable are not available"
+        "Unable to initialize the OpenAI API, 'AZURE_API_KEY' environment variable is not available"
       throw new Error(err)
     }
   }
