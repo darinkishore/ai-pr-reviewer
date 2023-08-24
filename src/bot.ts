@@ -34,7 +34,7 @@ Current date: ${currentDate}
 IMPORTANT: Entire response must be in the language with ISO code: ${options.language}
 `
 
-      const apiBaseUrl = `https://${process.env.AZURE_VALUE1}.openai.azure.com/openai/deployments/${process.env.AZURE_VALUE2}?api-version=2023-03-15-preview`
+      const apiBaseUrl = `https://fi-live-poc-emd-openai-eastus.openai.azure.com/openai/deployments/fi-emd-openai-gpt/chat/completions?api-version=2023-03-15-preview`
 
       const customFetch: typeof fetch = (
         input: RequestInfo | URL,
