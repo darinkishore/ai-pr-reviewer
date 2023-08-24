@@ -99,94 +99,25 @@ $description
 $short_summary
 \`\`\`
 
-## Instructions
+## IMPORTANT Instructions
 
-### Format
+Input: New hunks annotated with line numbers and old hunks (replaced code). Hunks represent incomplete code fragments.
+Additional Context: PR title, description, summaries and comment chains.
+Task: Review new hunks for substantive issues using provided context and respond with comments if necessary.
+Output: Review comments in markdown with exact line number ranges in new hunks. Start and end line numbers must be within the same hunk. For single-line comments, start=end line number. Must use example response format below.
+Use fenced code blocks using the relevant language identifier where applicable.
+Don't annotate code snippets with line numbers. Format and indent code correctly.
+Do not use \`suggestion\` code blocks.
+For fixes, use \`diff\` code blocks, marking changes with \`+\` or \`-\`. The line number range for comments with fix snippets must exactly match the range to replace in the new hunk.
 
-The format for changes provided in the example below consists of multiple change sections, each containing a new hunk (annotated with line numbers), an old hunk, and optionally, existing comment chains. Note that the old hunk code has been replaced by the new hunk. Some lines on the new hunk may be annotated with line numbers.
-
-### Review Process
-
-1. Perform a **meticulous line-by-line review** of new hunks, identifying substantial issues only.
-2. Take into consideration the context provided by old hunks, comment threads, and file content during your review.
-3. Remember, the hunk under review is a fragment of a larger codebase and may not show all relevant sections, such as definitions, imports, or usage of functions or variables.
-4. Expect incomplete code fragments or references to elements defined beyond the provided context.
-5. Trust the developer when they appear to utilize newer APIs and methods.
-6. Presume the developer has exhaustively tested their changes and is fully aware of their system-wide implications.
-7. Follow the "Enterprise Codebase Guidelines" section while reviewing the code to ensure compliance with the specific guidelines and best practices.
-
-
-### Enterprise Codebase Guidelines
-
-1. Adhere to the following general implementation values:
-   - Reusability > Copy & Paste
-   - Separation of Concerns > Bloated Functions/Objects/Files
-   - Modular > Bloated Targets
-   - SOLID principles
-2. Follow the UIKit implementation guidelines:
-   - Use Storyboards + AutoLayouts
-   - Use Xibs for non-reusable UIViews with subView outlets
-   - Use swift code and/or frame math for all other cases
-3. Maintain a Feature-Based Project File Organization.
-4. Write Unit-Tests to confirm functional & Business logic with changes.
-5. Write UI Test to confirm design behaviors.
-6. Do not introduce new:
-   - Hard-coded crashes fatalError() into Production
-   - Warnings
-   - Unnecessary/Cumbersome File/API Dependencies
-   - Unnecessary condition-nesting
-   - Entire Blocks of copy & pasted code with only 1 line/word (or absolutely NO) difference
-   - Tech debt
-7. Ensure code follows functional programming guidelines:
-   - Immutability
-   - Stateless-ness
-   - Declarative statements
-   - Use map, filter, reduce
-8. Adhere to reactive programming principles:
-   - Think in inputs and outputs
-   - React to changes in observed values
-
-
-### Response Format
-
-Respond only in the below example format, consisting of review sections. Each review section must have:
-
-1. A line number range
-2. A review comment for that range
-3. A separator after each review section
-
-### Line Number Ranges
-
-1. Line number ranges for each review section must be within the range of a specific new hunk.
-2. Start line number must belong to the same hunk as the end line number.
-3. Provide the **exact line number range (inclusive)** for each review comment.
-4. To leave a review comment on a single line, use the same line number for start and end.
-
-### Do's
-
-1. Focus **solely** on offering specific, objective insights based on the actual code.
-2. Use Markdown format for review comment text and fenced code blocks for code snippets.
-3. If needed, suggest new code snippets using the relevant language identifier in the fenced code blocks.
-4. If needed, provide a replacement snippet to fix an issue by using fenced code blocks using either `diff` or `suggestion` as the format.
-	1. If the change is less than 10 lines, use `suggestion`, otherwise, use `diff`. 
-	2. This snippet must be complete, correctly formatted & indented, and without line number annotations. 
-5. If there are no issues found on a line range, you **MUST** respond with the text `LGTM!` for that line range in the review section.
-
-### Don'ts
-
-1. Do **NOT** flag missing definitions, imports, or usages unless the context strongly suggests an issue.
-2. Do **NOT** restate information readily apparent in the code or the pull request.
-3. Do **NOT** provide general feedback, summaries, explanations of changes, or praises for making good additions.
-4. Do **NOT** question the developer's intentions behind the changes or warn them about potential compatibility issues with other dependencies.
-5. Avoid making assumptions about broader impacts beyond the given context or the necessity of the changes.
-6. Do **NOT** request the developer to review their changes.
+- Do NOT provide general feedback, summaries, explanations of changes, or praises 
+  for making good additions. 
+- Focus solely on offering specific, objective insights based on the 
+  given context and refrain from making broad comments about potential impacts on 
+  the system or question intentions behind the changes.
 
 If there are no issues found on a line range, you MUST respond with the 
 text \`LGTM!\` for that line range in the review section. 
-
-Reflect on your comments thoroughly before posting them.
-
-Finally, make sure you focus on the provided context, adhere to the guidelines, and make the best possible effort to review the code accurately.
 
 ## Example
 
@@ -199,7 +130,7 @@ Finally, make sure you focus on the provided context, adhere to the guidelines, 
 
 20: def add(x, y):
 21:     z = x + y
-22:     return z
+22:     retrn z
 23: 
 24: def multiply(x, y):
 25:     return x * y
@@ -222,9 +153,7 @@ def subtract(x, y):
 
 ---comment_chains---
 \`\`\`
-Please review this change. 
-Line length MUST BE less than 50 characters.
-All functions SHOULD begin with test_<function_name>.
+Please review this change.
 \`\`\`
 
 ---end_change_section---
@@ -351,6 +280,3 @@ $comment
     return inputs.render(this.reviewFileDiff)
   }
 }
-
-
-// to change comment instructions, modify the ---comment_chains--- section
