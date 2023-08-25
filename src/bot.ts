@@ -47,6 +47,13 @@ IMPORTANT: Entire response must be in the language with ISO code: ${options.lang
         delete (opts.headers as Record<string, string>)['Authorization']
         delete (opts.headers as Record<string, string>)['OpenAI-Organization']
 
+        // Print the request details to the debug log
+        info(`Fetching URL: ${input}`)
+        info(`Headers: ${JSON.stringify(Object.fromEntries(opts.headers as Headers))}`)
+        if (opts.body) {
+          info(`Body: ${opts.body}`)
+        }
+
         return fetch(input, opts)
       }
 
