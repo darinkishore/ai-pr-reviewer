@@ -34,8 +34,6 @@ Current date: ${currentDate}
 IMPORTANT: Entire response must be in the language with ISO code: ${options.language}
 `
 
-      const apiBaseUrl = `https://fi-live-poc-emd-openai-eastus.openai.azure.com/openai/deployments/fi-emd-openai-gpt/chat/completions?api-version=2023-03-15-preview`
-
       const customFetch: typeof fetch = (
         input: RequestInfo | URL,
         opts?: RequestInit
@@ -49,7 +47,11 @@ IMPORTANT: Entire response must be in the language with ISO code: ${options.lang
 
         // Print the request details to the debug log
         info(`Fetching URL: ${input}`)
-        info(`Headers: ${JSON.stringify(Object.fromEntries(opts.headers as Headers))}`)
+        info(
+          `Headers: ${JSON.stringify(
+            Object.fromEntries(opts.headers as Headers)
+          )}`
+        )
         if (opts.body) {
           info(`Body: ${opts.body}`)
         }
@@ -58,7 +60,7 @@ IMPORTANT: Entire response must be in the language with ISO code: ${options.lang
       }
 
       this.api = new ChatGPTAPI({
-        apiBaseUrl,
+        apiBaseUrl: options.apiBaseUrl,
         systemMessage,
         apiKey: process.env.AZURE_API_KEY,
         debug: options.debug,
