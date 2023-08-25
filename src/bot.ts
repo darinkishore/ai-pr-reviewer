@@ -17,6 +17,56 @@ export interface Ids {
   conversationId?: string
 }
 
+function customFetch(
+  input: RequestInfo | URL,
+  init?: RequestInit
+): Promise<Response> {
+  // Check if input is a string or a Request object
+  if (typeof input === 'string') {
+    // Modify the URL
+    const newUrl = `${input}?api-version=2023-03-15-preview`
+
+    // Modify the headers
+    init = init || {}
+    init.headers = init.headers || new Headers()
+    ;(init.headers as Headers).set('api-key', process.env.AZURE_API_KEY || '')
+    ;(init.headers as Headers).delete('Authorization')
+    ;(init.headers as Headers).delete('OpenAI-Organization')
+
+    // Log debug information
+    info(`Sending request to: ${newUrl}`)
+    info(
+      `With headers: ${JSON.stringify(
+        Object.fromEntries(init.headers as Headers),
+        null,
+        2
+      )}`
+    )
+
+    return fetch(newUrl, init)
+  } else if (input instanceof Request) {
+    // Modify the Request object's URL and headers
+    input.url = `${input.url}?api-version=2023-03-15-preview`
+    input.headers.set('api-key', process.env.AZURE_API_KEY || '')
+    input.headers.delete('Authorization')
+    input.headers.delete('OpenAI-Organization')
+
+    // Log debug information
+    info(`Sending request to: ${input.url}`)
+    info(
+      `With headers: ${JSON.stringify(
+        Object.fromEntries(input.headers),
+        null,
+        2
+      )}`
+    )
+
+    return fetch(input, init)
+  } else {
+    throw new Error('Invalid input type for customFetch function.')
+  }
+}
+
 export class Bot {
   private readonly api: ChatGPTAPI | null = null // not free
   private readonly options: Options
@@ -33,31 +83,6 @@ Current date: ${currentDate}
 
 IMPORTANT: Entire response must be in the language with ISO code: ${options.language}
 `
-
-      const customFetch: typeof fetch = (
-        input: RequestInfo | URL,
-        opts?: RequestInit
-      ) => {
-        opts = opts || {} // Ensure opts is defined
-        opts.headers = opts.headers || new Headers() // Ensure headers are defined
-        ;(opts.headers as Record<string, string>)['api-key'] =
-          process.env.AZURE_API_KEY!
-        delete (opts.headers as Record<string, string>)['Authorization']
-        delete (opts.headers as Record<string, string>)['OpenAI-Organization']
-
-        // Print the request details to the debug log
-        info(`Fetching URL: ${input}`)
-        info(
-          `Headers: ${JSON.stringify(
-            Object.fromEntries(opts.headers as Headers)
-          )}`
-        )
-        if (opts.body) {
-          info(`Body: ${opts.body}`)
-        }
-
-        return fetch(input, opts)
-      }
 
       this.api = new ChatGPTAPI({
         apiBaseUrl: options.apiBaseUrl,
