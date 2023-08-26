@@ -23,10 +23,6 @@ function customFetch(
 ): Promise<Response> {
   // Check if input is a string or a Request object
   if (typeof input === 'string') {
-    // Modify the URL
-    const newUrl = `${input}?api-version=2023-03-15-preview`
-
-    // Modify the headers
     init = init || {}
     init.headers = init.headers || new Headers()
     ;(init.headers as Headers).set('api-key', process.env.AZURE_API_KEY || '')
@@ -34,7 +30,7 @@ function customFetch(
     ;(init.headers as Headers).delete('OpenAI-Organization')
 
     // Log debug information
-    info(`Sending request to: ${newUrl}`)
+    info(`Sending request to: ${input} as STRING`)
     info(
       `With headers: ${JSON.stringify(
         Object.fromEntries(init.headers as Headers),
@@ -42,17 +38,15 @@ function customFetch(
         2
       )}`
     )
-
-    return fetch(newUrl, init)
+    return fetch(input, init)
   } else if (input instanceof Request) {
     // Modify the Request object's URL and headers
-    input.url = `${input.url}?api-version=2023-03-15-preview`
     input.headers.set('api-key', process.env.AZURE_API_KEY || '')
     input.headers.delete('Authorization')
     input.headers.delete('OpenAI-Organization')
 
     // Log debug information
-    info(`Sending request to: ${input.url}`)
+    info(`Sending request to: ${input.url} as REQUEST`)
     info(
       `With headers: ${JSON.stringify(
         Object.fromEntries(input.headers),
