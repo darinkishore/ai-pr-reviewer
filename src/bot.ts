@@ -19,46 +19,17 @@ export interface Ids {
 
 function customFetch(
   input: RequestInfo | URL,
-  init?: RequestInit
+  opts: RequestInit | undefined
 ): Promise<Response> {
-  // Check if input is a string or a Request object
-  if (typeof input === 'string') {
-    init = init || {}
-    init.headers = init.headers || new Headers()
-    ;(init.headers as Headers).set('api-key', process.env.AZURE_API_KEY || '')
-    ;(init.headers as Headers).delete('Authorization')
-    ;(init.headers as Headers).delete('OpenAI-Organization')
-
-    // Log debug information
-    info(`Sending request to: ${input} as STRING`)
-    info(
-      `With headers: ${JSON.stringify(
-        Object.fromEntries(init.headers as Headers),
-        null,
-        2
-      )}`
-    )
-    return fetch(input, init)
-  } else if (input instanceof Request) {
-    // Modify the Request object's URL and headers
-    input.headers.set('api-key', process.env.AZURE_API_KEY || '')
-    input.headers.delete('Authorization')
-    input.headers.delete('OpenAI-Organization')
-
-    // Log debug information
-    info(`Sending request to: ${input.url} as REQUEST`)
-    info(
-      `With headers: ${JSON.stringify(
-        Object.fromEntries(input.headers),
-        null,
-        2
-      )}`
-    )
-
-    return fetch(input, init)
-  } else {
-    throw new Error('Invalid input type for customFetch function.')
-  }
+  const newUrl = `${input}?api-version=2023-03-15-preview`
+  // @ts-ignore
+  opts.headers['api-key'] = process.env.AZURE_API_KEY!
+  // remove the header 'Authorization' to avoid error
+  // @ts-ignore
+  delete opts.headers['Authorization']
+  // @ts-ignore
+  delete opts.headers['OpenAI-Organization']
+  return fetch(newUrl, opts)
 }
 
 export class Bot {
