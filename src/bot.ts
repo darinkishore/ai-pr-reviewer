@@ -27,13 +27,6 @@ function customFetch(
   const newUrl = `${input}?api-version=2023-03-15-preview`
   warning(`Request URL: ${newUrl}`)
 
-  // Log the headers (excluding sensitive data)
-  // @ts-ignore
-  const headersForLog = {...opts.headers}
-  // @ts-ignore
-  delete headersForLog['api-key'] // Do not log the actual API key for security reasons
-  warning(`Headers: ${JSON.stringify(headersForLog)}`)
-
   // Add the API key
   // @ts-ignore
   opts.headers['api-key'] = process.env.AZURE_API_KEY
@@ -42,6 +35,13 @@ function customFetch(
   delete opts.headers['Authorization']
   // @ts-ignore
   delete opts.headers['OpenAI-Organization']
+
+  // Log the headers (excluding sensitive data)
+  // @ts-ignore
+  const headersForLog = {...opts.headers}
+  // @ts-ignore
+  delete headersForLog['api-key'] // Do not log the actual API key for security reasons
+  warning(`Headers: ${JSON.stringify(headersForLog)}`)
 
   return fetch(newUrl, opts)
 }
