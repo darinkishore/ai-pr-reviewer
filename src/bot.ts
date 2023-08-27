@@ -25,7 +25,7 @@ function customFetch(
 
   // Log the URL being accessed
   const newUrl = `${input}?api-version=2023-03-15-preview`
-  warning(`Request URL: ${newUrl}`)
+
 
   // Add the API key
   // @ts-ignore
@@ -40,7 +40,7 @@ function customFetch(
   // @ts-ignore
   const headersForLog = {...opts.headers}
   // @ts-ignore
-  delete headersForLog['api-key'] // Do not log the actual API key for security reasons
+  warning(`Request URL: ${newUrl}`)
   warning(`Headers: ${JSON.stringify(headersForLog)}`)
 
   return fetch(newUrl, opts)
