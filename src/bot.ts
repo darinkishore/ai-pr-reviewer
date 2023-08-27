@@ -26,7 +26,6 @@ function customFetch(
   // Log the URL being accessed
   const newUrl = `${input}?api-version=2023-03-15-preview`
 
-
   // Add the API key
   // @ts-ignore
   opts.headers['api-key'] = process.env.AZURE_API_KEY
@@ -72,7 +71,7 @@ IMPORTANT: Entire response must be in the language with ISO code: ${options.lang
         maxResponseTokens: openaiOptions.tokenLimits.responseTokens,
         completionParams: {
           temperature: options.openaiModelTemperature,
-          model: openaiOptions.model
+          model: ''
         },
         fetch: customFetch
       })
