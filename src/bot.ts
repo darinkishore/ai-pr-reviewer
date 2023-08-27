@@ -71,7 +71,7 @@ IMPORTANT: Entire response must be in the language with ISO code: ${options.lang
         maxResponseTokens: openaiOptions.tokenLimits.responseTokens,
         completionParams: {
           temperature: options.openaiModelTemperature,
-          model: ''
+          model: openaiOptions.model
         },
         fetch: customFetch
       })
