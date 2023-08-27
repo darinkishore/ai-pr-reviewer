@@ -21,14 +21,28 @@ function customFetch(
   input: RequestInfo | URL,
   opts: RequestInit | undefined
 ): Promise<Response> {
+  warning('Using custom fetch')
+
+  // Log the URL being accessed
   const newUrl = `${input}?api-version=2023-03-15-preview`
+  warning(`Request URL: ${newUrl}`)
+
+  // Log the headers (excluding sensitive data)
   // @ts-ignore
-  opts.headers['api-key'] = process.env.AZURE_API_KEY!
+  const headersForLog = {...opts.headers}
+  // @ts-ignore
+  delete headersForLog['api-key'] // Do not log the actual API key for security reasons
+  warning(`Headers: ${JSON.stringify(headersForLog)}`)
+
+  // Add the API key
+  // @ts-ignore
+  opts.headers['api-key'] = process.env.AZURE_API_KEY
   // remove the header 'Authorization' to avoid error
   // @ts-ignore
   delete opts.headers['Authorization']
   // @ts-ignore
   delete opts.headers['OpenAI-Organization']
+
   return fetch(newUrl, opts)
 }
 
@@ -70,6 +84,8 @@ IMPORTANT: Entire response must be in the language with ISO code: ${options.lang
   }
 
   chat = async (message: string, ids: Ids): Promise<[string, Ids]> => {
+    // print baseURl
+    info(`apiBaseUrl: ${this.options.apiBaseUrl}`)
     let res: [string, Ids] = ['', {}]
     try {
       res = await this.chat_(message, ids)
